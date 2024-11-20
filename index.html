@@ -14,7 +14,7 @@
         }
         iframe {
             border: 2px solid #333;
-            width: 80%;
+            width: 100%;
             height: 500px;
             margin-top: 20px;
         }
@@ -36,15 +36,19 @@
     </style>
 </head>
 <body>
-    <h1>Modificar Parámetro del Enlace</h1>
-    <p>Introduce un nuevo código para actualizar el enlace:</p>
+    <h1>Modificar TP</h1>
+    <p>Introduce un nuevo código:</p>
     <input type="text" id="codigo" placeholder="Ejemplo: TP123456" />
-    <button onclick="cambiarCodigo()">Actualizar Enlace</button>
+    <button onclick="cambiarCodigo()">Actualizar TP</button>
     <iframe 
         id="miIframe" 
         src="https://apiservice.sistemastp.com.mx/gsa/lite/v1/port/qr?qr=TP254733" 
         title="Iframe">
     </iframe>
+
+ <div id="qr-code">
+        <!-- Aquí se mostrará el código QR -->
+    </div>
 
     <script>
         function cambiarCodigo() {
@@ -56,7 +60,20 @@
             } else {
                 alert("Por favor, introduce un código válido.");
             }
+		
+            if (codigo) {
+            
+                const qrApi = "https://api.qrserver.com/v1/create-qr-code/";
+                const qrUrl = `${qrApi}?size=200x200&data=${encodeURIComponent(codigo)}`;
+
+                const qrCodeDiv = document.getElementById('qr-code');
+                qrCodeDiv.innerHTML = `<img src="${qrUrl}" alt="Código QR para ${codigo}" />`;
+            } else {
+                alert("Por favor, introduce un código válido.");
+            }
+
         }
-    </script>
+
+     </script>
 </body>
 </html>
