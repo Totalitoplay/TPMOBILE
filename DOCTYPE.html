@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Enlace Dinámicamente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        iframe {
+            border: 2px solid #333;
+            width: 80%;
+            height: 500px;
+            margin-top: 20px;
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Modificar Parámetro del Enlace</h1>
+    <p>Introduce un nuevo código para actualizar el enlace:</p>
+    <input type="text" id="codigo" placeholder="Ejemplo: TP123456" />
+    <button onclick="cambiarCodigo()">Actualizar Enlace</button>
+    <iframe 
+        id="miIframe" 
+        src="https://apiservice.sistemastp.com.mx/gsa/lite/v1/port/qr?qr=TP254733" 
+        title="Iframe">
+    </iframe>
+
+    <script>
+        function cambiarCodigo() {
+            const codigo = document.getElementById('codigo').value.trim();
+            if (codigo) {
+                const baseUrl = "https://apiservice.sistemastp.com.mx/gsa/lite/v1/port/qr?qr=";
+                const iframe = document.getElementById('miIframe');
+                iframe.src = baseUrl + codigo;
+            } else {
+                alert("Por favor, introduce un código válido.");
+            }
+        }
+    </script>
+</body>
+</html>
