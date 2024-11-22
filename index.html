@@ -39,7 +39,7 @@
     <h1>Modificar TP</h1>
     <p>Introduce un nuevo código:</p>
     <input type="text" id="codigo" placeholder="Ejemplo: TP123456" />
-    <button onclick="cambiarCodigo()">Actualizar TP</button>
+    <button id="miBoton" onclick="cambiarCodigo()">Actualizar TP</button>
     <iframe 
         id="miIframe" 
         src="https://apiservice.sistemastp.com.mx/gsa/lite/v1/port/qr?qr=TP254733" 
@@ -72,7 +72,12 @@
                 alert("Por favor, introduce un código válido.");
             }
 
-        }
+        }        
+		document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('miBoton').click(); // Simula el clic
+            }
+        });
 
      </script>
 </body>
