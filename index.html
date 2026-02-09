@@ -3,81 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modificar TP - Vista Ampliada</title>
+    <title>Gestor TP - Pantalla Dividida</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            text-align: center;
             margin: 0;
-            padding: 10px;
+            padding: 0;
             background-color: #f4f7f6;
+            height: 100vh;
+            display: flex; /* Layout principal en fila */
         }
 
-        /* Contenedor principal para aprovechar el ancho */
-        .main-container {
-            max-width: 95%; /* Ocupa el 95% del ancho de la pantalla */
-            margin: 0 auto;
+        /* LADO IZQUIERDO: El contenido principal */
+        .contenedor-iframe {
+            flex: 1; /* Ocupa todo el espacio restante */
+            padding: 10px;
+            height: 100vh;
         }
 
-        /* Estilo del Iframe */
         iframe {
-            border: 3px solid #333;
-            width: 100%;       /* Ocupa todo el ancho del contenedor */
-            height: 75vh;      /* Ocupa el 75% de la altura de la ventana visual */
-            margin-top: 15px;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            width: 100%;
+            height: 100%;
+            border: 2px solid #333;
+            border-radius: 8px;
             background-color: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* LADO DERECHO: Panel de control */
+        .panel-lateral {
+            width: 300px; /* Ancho fijo para el control */
+            background: #fff;
+            border-left: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #28a745;
+            padding-bottom: 10px;
         }
 
         .controles {
-            background: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
         }
 
-        input, button {
-	    text-transform: uppercase;
+        label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        input {
+            text-transform: uppercase;
             padding: 12px;
-            font-size: 18px;
-            margin: 5px;
+            font-size: 16px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            width: 100%;
         }
 
         button {
             background-color: #28a745;
             color: white;
             border: none;
+            padding: 12px;
+            border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 14px;
+            transition: background 0.3s;
         }
 
         button:hover {
             background-color: #218838;
         }
 
+        /* Espacio para el QR al final del panel */
+        #qr-container {
+            margin-top: auto; /* Empuja el QR al fondo del panel */
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
         #qr-code img {
-            margin-top: 10px;
+            max-width: 180px;
+            height: auto;
             border: 1px solid #ddd;
             padding: 5px;
             background: #fff;
+        }
+
+        #qr-code p {
+            font-weight: bold;
+            font-size: 18px;
+            margin: 10px 0 0 0;
+            color: #28a745;
         }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <h1>GESTOR TP</h1>
-        
-        <div class="controles">
-            <input type="text" id="codigo" placeholder="Introduce Código (TP...)" autofocus />
-            <button id="miBoton" onclick="cambiarCodigo()">Actualizar Vista</button>
-            <div id="qr-code"></div>
-        </div>
-
+    <div class="contenedor-iframe">
         <iframe 
             id="miIframe" 
             src="https://apiservice.sistemastp.com.mx/gsa/lite/v1/port/qr?qr=TP254733" 
@@ -85,34 +125,50 @@
         </iframe>
     </div>
 
+    <div class="panel-lateral">
+        <h1>GESTOR TP</h1>
+        
+        <div class="controles">
+            <label for="codigo">CÓDIGO DE UNIDAD</label>
+            <input type="text" id="codigo" placeholder="Ej: TP254733" autofocus />
+            <button id="miBoton" onclick="cambiarCodigo()">ACTUALIZAR VISTA</button>
+        </div>
+
+        <div id="qr-container">
+            <div id="qr-code">
+                </div>
+        </div>
+    </div>
+
     <script>
         function cambiarCodigo() {
             const input = document.getElementById('codigo');
-            // Convertimos el valor a mayúsculas automáticamente al leerlo
             const codigo = input.value.trim().toUpperCase(); 
             
             if (codigo) {
                 const baseUrl = "https://apiservice.sistemastp.com.mx/gsa/lite/v1/port/qr?qr=";
                 const iframe = document.getElementById('miIframe');
                 
-                // Ahora 'codigo' siempre irá en mayúsculas a la URL
+                // Actualizar Iframe
                 iframe.src = baseUrl + encodeURIComponent(codigo);
 
-                // Actualizar el QR también con mayúsculas
+                // Actualizar QR
                 const qrApi = "https://api.qrserver.com/v1/create-qr-code/";
-                const qrUrl = `${qrApi}?size=150x150&data=${encodeURIComponent(codigo)}`;
+                const qrUrl = `${qrApi}?size=200x200&data=${encodeURIComponent(codigo)}`;
+                
                 document.getElementById('qr-code').innerHTML = `
-                            <img src="${qrUrl}" alt="QR" />
-                            <p style="color: black; font-weight: bold;"> ${codigo}</p>
-                        `;
+                    <img src="${qrUrl}" alt="QR" />
+                    <p>${codigo}</p>
+                `;
 
-                input.value = ''; // Limpiar
+                input.value = ''; 
                 input.focus();
             } else {
                 alert("Por favor, introduce un código válido.");
             }
         }
 
+        // Ejecutar con la tecla Enter
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') document.getElementById('miBoton').click();
         });
